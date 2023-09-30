@@ -5,6 +5,7 @@ import com.backend.tomato.services.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -23,5 +24,15 @@ public class FoodController {
     @PostMapping("/add")
     public Food addFoodItem(@RequestBody Food food) {
         return this.foodService.addFoodItem(food);
+    }
+
+    @GetMapping
+    public String test(){
+        return "Successful Test";
+    }
+
+    @GetMapping("/currentuser")
+    public String  getLoggedInUser(Principal principal){
+        return principal.getName();
     }
 }
