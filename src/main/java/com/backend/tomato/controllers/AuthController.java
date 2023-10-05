@@ -4,6 +4,7 @@ import com.backend.tomato.entitites.User;
 import com.backend.tomato.models.JwtRequest;
 import com.backend.tomato.models.JwtResponse;
 import com.backend.tomato.security.JwtHelper;
+import com.backend.tomato.services.UserDetailsServiceImpl;
 import com.backend.tomato.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,12 +24,13 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin(origins = "*")
 public class AuthController {
     @Autowired
     private UserDetailsService userDetailsService;
 
     @Autowired
-    private AuthenticationManager manager;
+    private AuthenticationManager authenticationManager;
 
     @Autowired
     private JwtHelper helper;
@@ -36,6 +38,10 @@ public class AuthController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserDetailsServiceImpl userDetailsServiceImpl;
+
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest request) {
 
@@ -55,12 +61,10 @@ public class AuthController {
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(email, password);
         try {
-            manager.authenticate(authentication);
-
+            authenticationManager.authenticate(authentication);
         } catch (BadCredentialsException e) {
-            throw new BadCredentialsException(" Invalid Username or Password !!");
+            throw new BadCredentialsException("Invalid Username or Password !!");
         }
-
     }
     @ExceptionHandler(BadCredentialsException.class)
     public String exceptionHandler() {
@@ -78,9 +82,15 @@ public class AuthController {
     }
 
     @GetMapping("/currentuser")
-    public String getLoggedInUser(Principal principal){
-        return principal.getName();
+    public Principal getLoggedInUser(Principal principal){
+        System.out.println(principal);
+//        return principal.getName();
+        return principal;
     }
 
-
+    @GetMapping("/currentusername")
+    public String getCurrentUserName(Principal principal){
+        String email= principal.getName();
+        return this.userDetailsServiceImpl.getCurrentUserName(email);
+    }
 }

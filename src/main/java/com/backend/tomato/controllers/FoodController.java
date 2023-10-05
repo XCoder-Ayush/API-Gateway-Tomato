@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/food")
-@CrossOrigin("*")
+@CrossOrigin(origins = "*")
 public class FoodController {
 
     @Autowired
@@ -26,13 +26,4 @@ public class FoodController {
         return this.foodService.addFoodItem(food);
     }
 
-    @GetMapping
-    public String test(){
-        return "Successful Test";
-    }
-
-    @GetMapping("/currentuser")
-    public String  getLoggedInUser(Principal principal){
-        return principal.getName();
-    }
 }

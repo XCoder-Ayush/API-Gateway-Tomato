@@ -21,4 +21,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user=userDao.findByEmail(username).orElseThrow(()->new RuntimeException("User Not Found In Our DB"));
         return user;
     }
+
+    public String getCurrentUserName(String username) {
+        User user=userDao.findByEmail(username).orElseThrow(()->new RuntimeException("User Not Found In Our DB"));
+        String name=user.getName();
+        return name;
+    }
+
 }

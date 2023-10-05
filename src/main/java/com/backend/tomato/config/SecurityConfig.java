@@ -27,7 +27,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.disable())
+//                .cors(cors -> cors.disable())
+                .cors().and()
                 .authorizeRequests().
                 requestMatchers("/food/**").authenticated().requestMatchers("/auth/login").permitAll()
                 .requestMatchers("/auth/createuser").permitAll()
