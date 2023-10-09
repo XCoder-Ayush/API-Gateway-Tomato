@@ -18,12 +18,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 //        DB Logic
-        User user=userDao.findByEmail(username).orElseThrow(()->new RuntimeException("User Not Found In Our DB"));
+        User user=userDao.findByEmail(username).orElseThrow(()->new RuntimeException("User Not Found"));
         return user;
     }
 
     public String getCurrentUserName(String username) {
-        User user=userDao.findByEmail(username).orElseThrow(()->new RuntimeException("User Not Found In Our DB"));
+        User user=userDao.findByEmail(username).orElseThrow(()->new RuntimeException("User Not Found"));
         String name=user.getName();
         return name;
     }

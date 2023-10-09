@@ -13,8 +13,7 @@ import javax.mail.internet.*;
 public class EmailService {
 
     final String username="arp23359@gmail.com";
-
-    final String password="zzep nuiv icod lcuo";
+    final String password="donttrytoguessit";
     public String sendEmail(String to, String subject, String messageBody) {
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
