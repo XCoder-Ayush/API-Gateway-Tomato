@@ -17,10 +17,7 @@ public class OTPController {
 
     @Autowired
     private OTPMessageService otpMessageService;
-//    @GetMapping("/email")
-//    public String sendEmail(@RequestBody EmailRequest emailRequest){
-//        return this.emailService.sendEmail(emailRequest.getTo(),emailRequest.getSubject(),emailRequest.getMessage());
-//    }
+
     @Autowired
     private OTPEmailService otpEmailService;
     @GetMapping("/email/{to}")

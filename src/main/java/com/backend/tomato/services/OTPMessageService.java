@@ -10,9 +10,14 @@ import com.twilio.type.PhoneNumber;
 @Service
 public class OTPMessageService {
 
-    private String twilioAccountSid="AC56f9d156c564851853d8f72312c920af";
-    private String twilioAuthToken="6e26b48686ee4cfdf0851397bbe98912";
-    private String twilioPhoneNumber="+14844982895";
+    @Value("${twilio.account.sid}")
+    private String twilioAccountSid;
+
+    @Value("${twilio.account.sid}")
+    private String twilioAuthToken;
+
+    @Value("${twilio.account.phone}")
+    private String twilioPhoneNumber;
 
     @Autowired
     private OTPGeneratorService otpGeneratorService;

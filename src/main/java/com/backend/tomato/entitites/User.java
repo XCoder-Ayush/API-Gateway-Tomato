@@ -1,13 +1,12 @@
 package com.backend.tomato.entitites;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
+import java.util.*;
 
 @Getter
 @Setter
@@ -19,15 +18,29 @@ import java.util.Collection;
 public class User implements UserDetails {
 
     @Id
+    @Column(name = "user_id")
     private String userId;
-    private String name;
+    private String firstName;
+    private String lastName;
     private String email;
     private String password;
     private String about;
+    private String role;
+
+//    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+//    @JoinTable(
+//            name = "user_roles",
+//            joinColumns = @JoinColumn(name = "user_id"), // Column name in user_roles table
+//            inverseJoinColumns = @JoinColumn(name = "role_id") // Column name in user_roles table
+//    )
+//    private List<Role> roles=new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        HashSet<SimpleGrantedAuthority> authorities=new HashSet<>();
+        authorities.add(new SimpleGrantedAuthority(this.role));
+        System.out.println(authorities);
+        return authorities;
     }
 
     @Override

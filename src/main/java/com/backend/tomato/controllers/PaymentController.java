@@ -10,6 +10,7 @@ import com.razorpay.RazorpayException;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,12 @@ public class PaymentController {
 
     @Autowired
     private OrderService orderService;
+
+    @Value("${razorpay.public.key}")
+    private String key;
+
+    @Value("${razorpay.secret.key}")
+    private String secret;
     @PostMapping("/createorder")
     public String getOrder(@RequestBody Map<String,Object> data) throws RazorpayException {
 //        System.out.println(data);
@@ -31,10 +38,10 @@ public class PaymentController {
         int amount=Integer.parseInt(data.get("amount").toString());
         System.out.println("Amount") ;
 
-        RazorpayClient razorpay =  new RazorpayClient("rzp_test_jjYAvVxoTUmjSI","USFwJcQ1JhbenVYef5jMgcm9");
+        RazorpayClient razorpay =  new RazorpayClient(key,secret);
         System.out.println("After Client");
         try {
-            System.out.println("In try");
+            System.out.println("In Try Block");
             JSONObject orderRequest = new JSONObject();
             orderRequest.put("amount", amount); // amount in the smallest currency unit
             orderRequest.put("currency", "INR");

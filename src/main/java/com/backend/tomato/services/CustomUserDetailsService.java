@@ -8,10 +8,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
     private UserDao userDao;
@@ -24,8 +22,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     public String getCurrentUserName(String username) {
         User user=userDao.findByEmail(username).orElseThrow(()->new RuntimeException("User Not Found"));
-        String name=user.getName();
-        return name;
+        return user.getFirstName();
+    }
+
+    public String getCurrentUserRole(String email) {
+        User user=userDao.findByEmail(email).orElseThrow(()->new RuntimeException("User Not Found"));
+        return user.getRole();
     }
 
 }

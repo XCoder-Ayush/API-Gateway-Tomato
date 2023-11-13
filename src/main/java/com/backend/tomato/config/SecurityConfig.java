@@ -31,12 +31,17 @@ public class SecurityConfig {
 
         http.csrf(csrf -> csrf.disable())
 //                .cors(cors -> cors.disable())
-                .cors().and()
-                .authorizeRequests().
-                requestMatchers("/food/**").authenticated().requestMatchers("/auth/login").permitAll()
+                .cors()
+                .and()
+                .authorizeRequests()
+                .requestMatchers("/food/**").authenticated()
+                .requestMatchers("/auth/login").permitAll()
                 .requestMatchers("/auth/createuser").permitAll()
-                .anyRequest()
-                .authenticated()
+                .requestMatchers("/auth/verifyotp").permitAll()
+                .requestMatchers("/check/admin").hasAuthority("ADMIN")
+                .requestMatchers("/check/user").hasAuthority("USER")
+                .requestMatchers("/error").permitAll()
+                .anyRequest().authenticated()
                 .and().exceptionHandling(ex -> ex.authenticationEntryPoint(point))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

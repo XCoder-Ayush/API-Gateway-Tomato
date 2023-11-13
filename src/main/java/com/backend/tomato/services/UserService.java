@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Service
 public class UserService {
-
+    private static final String ROLE="USER";
 
     @Autowired
     private UserDao userDao;
@@ -20,6 +20,7 @@ public class UserService {
     PasswordEncoder passwordEncoder;
     public User createUser(User user){
         user.setUserId(UUID.randomUUID().toString());
+        user.setRole(ROLE);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         System.out.println(user.toString());
         return this.userDao.save(user);
@@ -27,5 +28,9 @@ public class UserService {
 
     public List<User> getUsers(){
         return this.userDao.findAll();
+    }
+
+    public boolean doesUserExistByEmail(String email) {
+        return userDao.existsByEmail(email);
     }
 }

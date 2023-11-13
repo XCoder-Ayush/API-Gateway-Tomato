@@ -19,13 +19,13 @@ import org.springframework.security.provisioning.UserDetailsManager;
 public class AppConfig {
 
 
-    //    @Bean
+//    @Bean
 //    public UserDetailsService userDetailsService(){
 //        UserDetails userDetails= User.builder().username("ayush").password(passwordEncoder().encode("abc")).roles("ADMIN").build();
 ////        User implements UserDetails, and build on Builder Design Pattern
 ////        User.builder() returns UserBuilder object
 //
-////        UserDetailsService -> UserDetailsManager -> InMemoryUserDetailsManager
+//        UserDetailsService -> UserDetailsManager -> InMemoryUserDetailsManager
 //        return new InMemoryUserDetailsManager(userDetails);
 //    }
 
