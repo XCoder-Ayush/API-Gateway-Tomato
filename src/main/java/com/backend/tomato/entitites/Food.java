@@ -21,7 +21,7 @@ public class Food {
     @Column(length = 1000)
     private String name;
 
-    private boolean favorite = false;
+//    private boolean favorite = false;
 
     @ElementCollection
     @CollectionTable(name = "food_tags", joinColumns = @JoinColumn(name = "food_id"))
@@ -31,13 +31,20 @@ public class Food {
     @Column(length = 1000)
     private String imageUrl;
 
-    @Column(length = 1000)
-    private String cookTime;
+//    @Column(length = 1000)
+//    private String cookTime;
 
-    @ElementCollection
-    @CollectionTable(name = "food_origins", joinColumns = @JoinColumn(name = "food_id"))
-    @Column(name = "origin", length = 1000)
-    private List<String> origins;
+
+//    @ElementCollection
+//    @CollectionTable(name = "food_origins", joinColumns = @JoinColumn(name = "food_id"))
+//    @Column(name = "origin", length = 1000)
+//    private List<String> origins;
+    private Integer cookTime;
+
+    @Column(length = 1000)
+    private String description;
 
     private double stars;
+
+    private double onSale;
 }
