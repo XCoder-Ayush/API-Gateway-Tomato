@@ -9,6 +9,8 @@ import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
 
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -30,26 +32,23 @@ public class PaymentController {
 
     @Value("${razorpay.secret.key}")
     private String secret;
+
+    Logger logger= LoggerFactory.getLogger(PaymentController.class);
+
     @PostMapping("/createorder")
     public String getOrder(@RequestBody Map<String,Object> data) throws RazorpayException {
-//        System.out.println(data);
-//        int amount=data.getAmount();
-        System.out.println("Got Order");
+//        System.out.println("Got Order");
         int amount=Integer.parseInt(data.get("amount").toString());
-        System.out.println("Amount") ;
-
         RazorpayClient razorpay =  new RazorpayClient(key,secret);
-        System.out.println("After Client");
         try {
-            System.out.println("In Try Block");
             JSONObject orderRequest = new JSONObject();
             orderRequest.put("amount", amount); // amount in the smallest currency unit
             orderRequest.put("currency", "INR");
             orderRequest.put("receipt", "order_rcptid_11");
-            System.out.println("B4");
             Order order = razorpay.Orders.create(orderRequest);
-            System.out.println("HERE");
             System.out.println(order);
+
+            logger.info("Order {}"+order);
 
             /*  Saving In DB */
 
@@ -64,12 +63,11 @@ public class PaymentController {
 //            System.out.println(myOrder);
 //            save my order in db
 //            this.orderService.saveOrder(myOrder);
-            System.out.println("Below");
             return order.toString();
-
         } catch (RazorpayException e) {
             // Handle Exception
-            System.out.println(e.getMessage());
+//            System.out.println(e.getMessage());
+            logger.info("Exception Occured {}" + e.getMessage());
         }
         return "";
     }
