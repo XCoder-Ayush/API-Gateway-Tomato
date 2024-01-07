@@ -1,8 +1,13 @@
 package com.backend.tomato.entitites;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -11,34 +16,27 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Food {
 
     @Id
-    private Long id;
+    private String id;
 
     private double price;
 
     @Column(length = 1000)
     private String name;
 
-//    private boolean favorite = false;
-
-    @ElementCollection
-    @CollectionTable(name = "food_tags", joinColumns = @JoinColumn(name = "food_id"))
-    @Column(name = "tag", length = 1000)
-    private List<String> tags;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "food_category",
+            joinColumns = @JoinColumn(name = "food_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id"))
+    private List<Category> categories = new ArrayList<>();
 
     @Column(length = 1000)
     private String imageUrl;
 
-//    @Column(length = 1000)
-//    private String cookTime;
-
-
-//    @ElementCollection
-//    @CollectionTable(name = "food_origins", joinColumns = @JoinColumn(name = "food_id"))
-//    @Column(name = "origin", length = 1000)
-//    private List<String> origins;
     private Integer cookTime;
 
     @Column(length = 1000)
@@ -47,4 +45,6 @@ public class Food {
     private double stars;
 
     private double onSale;
+
+    private Integer published;
 }

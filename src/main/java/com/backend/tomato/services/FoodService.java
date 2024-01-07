@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class FoodService {
@@ -14,18 +15,12 @@ public class FoodService {
     FoodRepository foodRepository;
 
     public List<Food> getAllFoodItems(){
-        List<Food> foodItems=this.foodRepository.findAll();
-//        System.out.println("**********************************************************************************************************************************");
-//        System.out.println(foodItems);
-
-        for(Food food : foodItems){
-            System.out.println(food.getTags());
-        }
-        return foodItems;
+        return this.foodRepository.findAll();
     }
 
     public Food addFoodItem(Food food) {
         System.out.println(food);
+        food.setId(UUID.randomUUID().toString());
         return this.foodRepository.save(food);
     }
 }
