@@ -41,4 +41,16 @@ public class CategoryController {
         }
     }
 
+    @GetMapping("/{categoryId}")
+    public ResponseEntity<Integer> getCategoryCount(@PathVariable String categoryId){
+        try{
+            Integer count=this.categoryService.getCategoryCount(categoryId);
+            return new ResponseEntity<>(count,HttpStatus.OK);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+    }
+
 }
