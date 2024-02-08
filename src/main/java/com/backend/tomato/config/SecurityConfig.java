@@ -34,6 +34,7 @@ public class SecurityConfig {
                 .cors()
                 .and()
                 .authorizeRequests()
+                .requestMatchers("/cloudinary/upload").permitAll()
                 .requestMatchers("/category").permitAll()
                 .requestMatchers("/category/{categoryId}").permitAll()
                 .requestMatchers("/food/get").permitAll()
