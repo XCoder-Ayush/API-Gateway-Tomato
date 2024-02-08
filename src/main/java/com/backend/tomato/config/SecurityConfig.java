@@ -35,6 +35,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
                 .requestMatchers("/cloudinary/upload").permitAll()
+                .requestMatchers("/health").permitAll()
                 .requestMatchers("/category").permitAll()
                 .requestMatchers("/category/{categoryId}").permitAll()
                 .requestMatchers("/food/get").permitAll()
