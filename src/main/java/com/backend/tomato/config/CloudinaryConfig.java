@@ -1,6 +1,8 @@
 package com.backend.tomato.config;
 
 import com.cloudinary.Cloudinary;
+import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,13 +12,25 @@ import java.util.Map;
 @Configuration
 public class CloudinaryConfig {
 
+    @Value("${cloudinary.cloud.name}")
+    private String cloudinaryCloudName;
+
+    @Value("${cloudinary.api.key}")
+    private String cloudinaryApiKey;
+
+    @Value("${cloudinary.api.secret}")
+    private String cloudinaryApiSecret;
+
     @Bean
     public Cloudinary getCloudinary(){
+
         Map config=new HashMap();
-        config.put("cloud_name","dgfljm0r3");
-        config.put("api_key","384727883763165");
-        config.put("api_secret","6MEYBzY5q8SOXlYzSs4DHuyxvkQ");
+
+        config.put("cloud_name",cloudinaryCloudName);
+        config.put("api_key",cloudinaryApiKey);
+        config.put("api_secret",cloudinaryApiSecret);
         config.put("secure",true);
+
         return new Cloudinary(config);
     }
 
