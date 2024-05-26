@@ -31,6 +31,8 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.*;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -102,6 +104,7 @@ public class AuthController {
 
     @GetMapping("/currentuser")
     public Principal getLoggedInUser(Principal principal) {
+        System.out.println("Inside Principal Return");
         System.out.println(principal);
         return principal;
     }
@@ -117,7 +120,13 @@ public class AuthController {
         String email = principal.getName();
         return this.customUserDetailsService.getCurrentUserRole(email);
     }
-
+    private static OkHttpClient getClient() {
+        return new OkHttpClient.Builder()
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
+                .build();
+    }
     @PostMapping("/createuser")
     public ResponseEntity<String> attemptUserCreation(@RequestBody User user) {
         System.out.println("In Create User");
@@ -129,9 +138,10 @@ public class AuthController {
         }
 
 //        Email Exists Or Not In SMTP Server
+//        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = getClient();
 
-        OkHttpClient client = new OkHttpClient();
-//        String apiUrl="https://api.apilayer.com/email_verification/check?email=";
+        //        String apiUrl="https://api.apilayer.com/email_verification/check?email=";
 
         String[] parts = email.split("@");
         System.out.println(parts);
@@ -152,21 +162,20 @@ public class AuthController {
 //
         try (Response response = client.newCall(request).execute()) {
             String jsonResponse=response.body().string();
+            System.out.println(jsonResponse);
             Gson gson=new Gson();
             EmailVerificationResponse verificationResponse = gson.fromJson(jsonResponse, EmailVerificationResponse.class);
             if (!verificationResponse.isMxFound()) {
-//                System.out.println(verificationResponse);
-//                System.out.println(verificationResponse.isMxFound());
-//                System.out.println(response.body().string());
-//            } else {
                 System.out.println("Request Failed With Code: " + response.code());
                 return new ResponseEntity<>("Invalid Email",HttpStatus.OK);
             }
-        } catch (ExpiredJwtException e) {
+        }
+        catch (ExpiredJwtException e) {
             System.out.println("*************EXPIRED****************");
             String otpId = this.otpEmailService.sendEmail(email);
             return new ResponseEntity<>(otpId, HttpStatus.OK);
-        }catch (IOException e){
+        }
+        catch (IOException e){
             System.out.println("*************OTHER ONE****************");
             e.printStackTrace();
             return new ResponseEntity<>("Invalid Email",HttpStatus.OK);

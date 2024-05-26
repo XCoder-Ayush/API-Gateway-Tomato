@@ -4,9 +4,12 @@ import com.backend.tomato.entitites.Food;
 import com.backend.tomato.services.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.print.attribute.standard.Media;
 import java.security.Principal;
 import java.util.List;
 
@@ -24,9 +27,10 @@ public class FoodController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Food> addFoodItem(@RequestBody Food food) {
+    public ResponseEntity<Food> addFoodItem(@RequestPart("product") Food food,
+                                            @RequestPart(value = "image", required = false) MultipartFile image) {
         try{
-            this.foodService.addFoodItem(food);
+            this.foodService.addFoodItem(food,image);
             return new ResponseEntity<>(food,HttpStatus.OK);
         }catch (Exception e){
             e.printStackTrace();
@@ -34,10 +38,11 @@ public class FoodController {
         }
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<Food> updateFoodItem(@RequestBody Food food) {
+    @PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Food> updateFoodItem(@RequestPart("product") Food food,
+                                               @RequestPart(value = "image", required = false) MultipartFile image) {
         try{
-            this.foodService.updateFoodItem(food);
+            this.foodService.updateFoodItem(food,image);
             return new ResponseEntity<>(food,HttpStatus.OK);
         }catch (Exception e){
             e.printStackTrace();

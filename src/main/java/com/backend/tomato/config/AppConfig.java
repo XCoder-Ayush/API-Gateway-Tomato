@@ -18,16 +18,14 @@ import org.springframework.security.provisioning.UserDetailsManager;
 @EnableWebSecurity
 public class AppConfig {
 
-
-//    @Bean
-//    public UserDetailsService userDetailsService(){
-//        UserDetails userDetails= User.builder().username("ayush").password(passwordEncoder().encode("abc")).roles("ADMIN").build();
-////        User implements UserDetails, and build on Builder Design Pattern
-////        User.builder() returns UserBuilder object
-//
-//        UserDetailsService -> UserDetailsManager -> InMemoryUserDetailsManager
-//        return new InMemoryUserDetailsManager(userDetails);
-//    }
+/*
+    @Bean
+    public UserDetailsService userDetailsService(){
+        UserDetails userDetails= User.builder().username("ayush").password(passwordEncoder().encode("abc")).roles("ADMIN").build();
+        UserDetailsService -> UserDetailsManager -> InMemoryUserDetailsManager
+        return new InMemoryUserDetailsManager(userDetails);
+    }
+*/
 
     @Bean
     PasswordEncoder passwordEncoder(){

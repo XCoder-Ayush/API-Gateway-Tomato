@@ -1,11 +1,12 @@
 package com.backend.tomato.entitites;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.*;
 
 @Getter
@@ -13,33 +14,44 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@ToString
 @Table(name="users")
 public class User implements UserDetails {
 
     @Id
     @Column(name = "user_id")
     private String userId;
+
     private String firstName;
     private String lastName;
     private String email;
     private String password;
     private String about;
     private String role;
+    private String phone;
 
-//    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-//    @JoinTable(
-//            name = "user_roles",
-//            joinColumns = @JoinColumn(name = "user_id"), // Column name in user_roles table
-//            inverseJoinColumns = @JoinColumn(name = "role_id") // Column name in user_roles table
-//    )
-//    private List<Role> roles=new ArrayList<>();
+    @OneToMany(
+            mappedBy = "user",
+            targetEntity = Address.class,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @JsonIgnore
+    private List<Address> addresses = new ArrayList<>();
+
+
+    @OneToMany(
+            mappedBy = "user",
+            targetEntity = Payment.class,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @JsonIgnore
+    private List<Payment> payments = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        HashSet<SimpleGrantedAuthority> authorities=new HashSet<>();
+        HashSet<SimpleGrantedAuthority> authorities = new HashSet<>();
         authorities.add(new SimpleGrantedAuthority(this.role));
-        System.out.println(authorities);
         return authorities;
     }
 
@@ -71,5 +83,22 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId='" + userId + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", about='" + about + '\'' +
+                ", role='" + role + '\'' +
+                ", addressCount=" + getAddressCount() +
+                '}';
+    }
+
+    private int getAddressCount() {
+        return Hibernate.isInitialized(addresses) ? addresses.size() : 0;
     }
 }
