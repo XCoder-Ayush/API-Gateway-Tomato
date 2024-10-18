@@ -1,4 +1,4 @@
-package com.backend.tomato.controllers;
+package com.backend.tomato.controllers.v1;
 import java.io.*;
 import com.backend.tomato.dao.OTPDao;
 import com.backend.tomato.entitites.OneTimePassword;
@@ -11,7 +11,6 @@ import com.backend.tomato.services.OTPEmailService;
 import com.backend.tomato.services.UserService;
 import com.google.gson.Gson;
 import io.jsonwebtoken.ExpiredJwtException;
-import org.json.HTTP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +40,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/auth")
 @CrossOrigin(origins = "*")
 public class AuthController {
+
     @Autowired
     private UserDetailsService userDetailsService;
 
@@ -48,8 +48,7 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private JwtHelper helper;
-    private Logger logger = LoggerFactory.getLogger(AuthController.class);
+    private JwtHelper jwtHelper;
 
     @Autowired
     private UserService userService;
@@ -68,16 +67,22 @@ public class AuthController {
 
     @Value("${email.validation.api.key}")
     private String apiKey;
+
+    private Logger logger = LoggerFactory.getLogger(AuthController.class);
+
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest request) {
         this.doAuthenticate(request.getEmail(), request.getPassword());
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
-        String token = this.helper.generateToken(userDetails);
+        String token = this.jwtHelper.generateToken(userDetails);
 
-        JwtResponse response = JwtResponse.builder()
-                .jwtToken(token)
-                .username(userDetails.getUsername()).build();
+        JwtResponse response = JwtResponse
+                                        .builder()
+                                        .jwtToken(token)
+                                        .username(userDetails.getUsername())
+                                        .build();
+
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

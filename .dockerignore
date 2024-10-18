@@ -1,0 +1,46 @@
+# Ignore Maven build files
+target/
+**/target/
+
+# Ignore temporary files created by the IDE
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Ignore Eclipse and other IDE project files
+.project
+.classpath
+.settings/
+*.prefs
+
+# Ignore IntelliJ project files
+*.iml
+*.iws
+.idea/
+*.idea/
+*.log
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore Git files
+.git/
+.gitignore
+
+# Ignore logs and temporary files
+*.log
+logs/
+*.swp
+*~
+*.bak
+
+# Ignore compiled Java classes
+*.class
+
+# Ignore test resources and results
+**/test-output/
+
+# Application files
+src/main/resources/application-dev.properties
