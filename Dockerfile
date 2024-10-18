@@ -9,7 +9,7 @@ COPY pom.xml .
 RUN mvn dependency:go-offline -B
 
 # Copy the source code to the container
-COPY src/main/java/com/backend/tomato/controllers/v1/CategoryController.java ./src
+COPY src ./src
 
 # Build the Spring Boot application
 RUN mvn clean package -DskipTests

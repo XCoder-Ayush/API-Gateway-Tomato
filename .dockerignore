@@ -42,5 +42,3 @@ logs/
 # Ignore test resources and results
 **/test-output/
 
-# Application files
-src/main/resources/application-dev.properties
