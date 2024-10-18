@@ -175,8 +175,7 @@ public class PaymentService {
             User user=this.userService.fetchUserById(userId);
             payment.setUser(user);
 
-            Payment savedPayment  = this.paymentDao.save(payment);
-            return savedPayment;
+            return this.paymentDao.save(payment);
         }catch (Exception e){
             e.printStackTrace();
             throw e;

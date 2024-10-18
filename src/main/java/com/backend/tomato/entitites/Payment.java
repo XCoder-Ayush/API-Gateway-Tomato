@@ -38,7 +38,6 @@ public class Payment {
     @NotNull
     private BigDecimal amount;
 
-    @NotNull
     private String contact;
 
     private String email;

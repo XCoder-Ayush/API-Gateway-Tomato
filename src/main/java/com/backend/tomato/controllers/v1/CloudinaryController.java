@@ -1,4 +1,4 @@
-package com.backend.tomato.controllers;
+package com.backend.tomato.controllers.v1;
 
 import com.backend.tomato.services.CloudinaryService;
 import org.springframework.beans.factory.annotation.Autowired;
