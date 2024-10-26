@@ -162,6 +162,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>tomato-api-gateway</finalName>
 	</build>
 
 </project>

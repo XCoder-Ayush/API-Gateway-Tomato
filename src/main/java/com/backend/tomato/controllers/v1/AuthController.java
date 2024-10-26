@@ -1,4 +1,5 @@
 package com.backend.tomato.controllers.v1;
+
 import java.io.*;
 import com.backend.tomato.dao.OTPDao;
 import com.backend.tomato.entitites.OneTimePassword;
@@ -34,7 +35,6 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.*;
 import org.springframework.web.bind.annotation.RequestBody;
-
 
 @RestController
 @RequestMapping("/auth")
@@ -78,10 +78,10 @@ public class AuthController {
         String token = this.jwtHelper.generateToken(userDetails);
 
         JwtResponse response = JwtResponse
-                                        .builder()
-                                        .jwtToken(token)
-                                        .username(userDetails.getUsername())
-                                        .build();
+                .builder()
+                .jwtToken(token)
+                .username(userDetails.getUsername())
+                .build();
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -125,6 +125,7 @@ public class AuthController {
         String email = principal.getName();
         return this.customUserDetailsService.getCurrentUserRole(email);
     }
+
     private static OkHttpClient getClient() {
         return new OkHttpClient.Builder()
                 .connectTimeout(30, TimeUnit.SECONDS)
@@ -132,58 +133,58 @@ public class AuthController {
                 .writeTimeout(30, TimeUnit.SECONDS)
                 .build();
     }
+
     @PostMapping("/createuser")
     public ResponseEntity<String> attemptUserCreation(@RequestBody User user) {
         System.out.println("In Create User");
         System.out.println(user.toString());
-        String email=user.getEmail();
+        String email = user.getEmail();
 
-        if(this.userService.doesUserExistByEmail(email)){
-            return new ResponseEntity<>("User Already Exists",HttpStatus.IM_USED);
+        if (this.userService.doesUserExistByEmail(email)) {
+            return new ResponseEntity<>("User Already Exists", HttpStatus.IM_USED);
         }
 
-//        Email Exists Or Not In SMTP Server
-//        OkHttpClient client = new OkHttpClient();
+        // Email Exists Or Not In SMTP Server
+        // OkHttpClient client = new OkHttpClient();
         OkHttpClient client = getClient();
 
-        //        String apiUrl="https://api.apilayer.com/email_verification/check?email=";
+        // String apiUrl="https://api.apilayer.com/email_verification/check?email=";
 
         String[] parts = email.split("@");
         System.out.println(parts);
         String requestUrl;
-        if(parts.length == 2){
-            requestUrl=apiUrl + parts[0] + "%40" + parts[1];
+        if (parts.length == 2) {
+            requestUrl = apiUrl + parts[0] + "%40" + parts[1];
             System.out.println(requestUrl);
-        }else{
+        } else {
             System.out.println("Format Wrong");
-            return new ResponseEntity<>("Invalid Email",HttpStatus.OK);
+            return new ResponseEntity<>("Invalid Email", HttpStatus.OK);
         }
 
         Request request = new Request.Builder()
                 .url(requestUrl)
-                .addHeader("apikey", apiKey)  // Check the correct header name
+                .addHeader("apikey", apiKey) // Check the correct header name
                 .method("GET", null)
                 .build();
-//
+        //
         try (Response response = client.newCall(request).execute()) {
-            String jsonResponse=response.body().string();
+            String jsonResponse = response.body().string();
             System.out.println(jsonResponse);
-            Gson gson=new Gson();
-            EmailVerificationResponse verificationResponse = gson.fromJson(jsonResponse, EmailVerificationResponse.class);
+            Gson gson = new Gson();
+            EmailVerificationResponse verificationResponse = gson.fromJson(jsonResponse,
+                    EmailVerificationResponse.class);
             if (!verificationResponse.isMxFound()) {
                 System.out.println("Request Failed With Code: " + response.code());
-                return new ResponseEntity<>("Invalid Email",HttpStatus.OK);
+                return new ResponseEntity<>("Invalid Email", HttpStatus.OK);
             }
-        }
-        catch (ExpiredJwtException e) {
+        } catch (ExpiredJwtException e) {
             System.out.println("*************EXPIRED****************");
             String otpId = this.otpEmailService.sendEmail(email);
             return new ResponseEntity<>(otpId, HttpStatus.OK);
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             System.out.println("*************OTHER ONE****************");
             e.printStackTrace();
-            return new ResponseEntity<>("Invalid Email",HttpStatus.OK);
+            return new ResponseEntity<>("Invalid Email", HttpStatus.OK);
         }
         String otpId = this.otpEmailService.sendEmail(email);
         return new ResponseEntity<>(otpId, HttpStatus.OK);
@@ -191,10 +192,10 @@ public class AuthController {
 
     @PostMapping("/verifyotp")
     public ResponseEntity<String> verifyOtp(@RequestBody User user,
-                                            @RequestParam String id,
-                                            @RequestParam Integer oneTimePasswordCode,
-                                            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date expires) {
-        OneTimePassword userOneTimePassword=new OneTimePassword();
+            @RequestParam String id,
+            @RequestParam Integer oneTimePasswordCode,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date expires) {
+        OneTimePassword userOneTimePassword = new OneTimePassword();
         userOneTimePassword.setId(id);
         userOneTimePassword.setOneTimePasswordCode(oneTimePasswordCode);
         userOneTimePassword.setExpires(expires);
@@ -214,8 +215,8 @@ public class AuthController {
 
             if (apiExpiration.isBefore(dbExpiration)) {
                 if (userOneTimePassword.getOneTimePasswordCode().equals(fetchedOTP.getOneTimePasswordCode())) {
-//                     Register User With This Particular OTP id
-//                    Get User Mapped With This Particular OTP Id
+                    // Register User With This Particular OTP id
+                    // Get User Mapped With This Particular OTP Id
                     this.userService.createUser(user);
                     return new ResponseEntity<>("OTP Verified", HttpStatus.OK);
                 } else {
@@ -229,6 +230,7 @@ public class AuthController {
         }
     }
 }
+
 class EmailVerificationResponse {
     private boolean mx_found;
 
